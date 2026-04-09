@@ -244,6 +244,7 @@ input[type="range"]::-moz-range-thumb { width:16px; height:16px; background:var(
 .settings-save-btn { padding:9px 18px; background:var(--rust); color:white; border:1.5px solid var(--ink); box-shadow:2px 2px 0 var(--ink); font-family:var(--mono); font-size:0.76rem; cursor:pointer; transition:all 0.12s; font-style:italic; letter-spacing:0.04em; }
 .settings-save-btn:hover { background:var(--ink); transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--rust); }
 
+.gemini-fallback-note { font-family:var(--mono); font-size:0.68rem; color:var(--green); font-style:italic; padding:6px 10px 7px; background:rgba(42,122,75,0.06); border:1px solid rgba(42,122,75,0.18); border-top:none; letter-spacing:0.02em; }
 .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--ink); color:white; font-family:var(--mono); font-size:0.78rem; letter-spacing:0.06em; padding:11px 22px; z-index:1000; transition:transform 0.3s ease; pointer-events:none; font-style:italic; }
 .toast.show { transform:translateX(-50%) translateY(0); }
 
@@ -296,6 +297,7 @@ input[type="range"]::-moz-range-thumb { width:16px; height:16px; background:var(
               <input class="api-key-input" type="password" id="apiKey-openai" placeholder="sk-…" autocomplete="off" oninput="onKeyInput('openai')" />
               <button class="api-key-save-btn" onclick="activateKey('openai')">Connect</button>
             </div>
+            <div class="gemini-fallback-note" id="geminiFallbackNote">&#x2022; No key? Gemini runs automatically</div>
           </div>
           <div class="api-minimized" id="apiMinimized" onclick="expandApiWidget()">
             <div class="api-minimized-dot"></div>
@@ -483,6 +485,14 @@ function minimizeApiWidget(){
   document.getElementById('apiMinimized').classList.add('visible');
   document.getElementById('apiMinimizedLabel').textContent=(activeProvider==='anthropic'?'Claude (Anthropic)':'ChatGPT (OpenAI)')+' · connected';
 }
+function showGeminiMinimized(){
+  document.getElementById('apiInputArea').style.display='none';
+  document.getElementById('apiTabs').style.display='none';
+  const m=document.getElementById('apiMinimized');
+  m.classList.add('visible');
+  m.querySelector('.api-minimized-dot').style.background='var(--green)';
+  document.getElementById('apiMinimizedLabel').textContent='Gemini (free tier) · active';
+}
 function expandApiWidget(){
   document.getElementById('apiInputArea').style.display='block';
   document.getElementById('apiTabs').style.display='flex';
@@ -586,9 +596,12 @@ async function fetchWikipediaText(title){
   return{text:page.extract.slice(0,9000),title:page.title};
 }
 
+const GEMINI_KEY='AIzaSyBoAa4s0FSbj-ZlpqlbsFNBQy1-M0m08Hg';
+
 async function callLLM(prompt){
   const key=getActiveKey();
-  if(!key)throw new Error('No API key connected. Click the AI Provider section to add one.');
+  // If no user key, fall back to Gemini free tier
+  if(!key) return callGemini(prompt);
   if(activeProvider==='anthropic'){
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Anthropic API error '+res.status);}
@@ -600,6 +613,14 @@ async function callLLM(prompt){
     return(await res.json()).choices[0].message.content;
   }
   throw new Error('Unknown provider');
+}
+
+async function callGemini(prompt){
+  const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_KEY;
+  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2000}})});
+  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Gemini API error '+res.status);}
+  const d=await res.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
 }
 
 function parseResponse(raw){
@@ -623,16 +644,17 @@ function parseResponse(raw){
 }
 
 async function extractFacts(){
-  const key=getActiveKey();
-  if(!key){expandApiWidget();showToast('Connect an API key first');return;}
   const lengthVal=+document.getElementById('lengthSlider').value;
   const toneVal=+document.getElementById('toneSlider').value;
   const nsfwOn=document.getElementById('nsfwToggle').checked;
   const btn=document.getElementById('extractBtn'),panel=document.getElementById('resultsPanel');
   const pasteText=document.getElementById('pasteText').value.trim();
   if(!selectedArticle&&!pasteText){showToast('Search for an article or paste text first');return;}
+  const usingGemini=!getActiveKey();
+  if(usingGemini)showGeminiMinimized();
   btn.disabled=true;btn.textContent='Learning\u2026';
-  panel.innerHTML='<div class="loading-block"><div class="loading-spinner"></div><div class="loading-text">Extracting facts</div></div>';
+  const providerLabel=usingGemini?'Gemini':activeProvider==='anthropic'?'Claude':'ChatGPT';
+  panel.innerHTML='<div class="loading-block"><div class="loading-spinner"></div><div class="loading-text">Extracting via '+providerLabel+'</div></div>';
   try{
     let articleText,articleTitle,articleUrl='';
     if(selectedArticle){articleUrl=selectedArticle.url;({text:articleText,title:articleTitle}=await fetchWikipediaText(selectedArticle.title));}
