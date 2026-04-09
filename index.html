@@ -288,7 +288,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
         <!-- API status pill -->
         <button class="api-status-pill" id="apiStatusPill" onclick="switchView('settings')">
           <span class="dot dot-off" id="pillDot"></span>
-          <span id="pillLabel">No API key &mdash; add one in Settings</span>
+          <span id="pillLabel">Gemini &middot; free tier</span>
         </button>
 
         <div class="section-head"><span class="section-label">Article</span><div class="section-rule"></div></div>
@@ -696,11 +696,6 @@ function parseResponse(raw){
 
 /* MAIN EXTRACT */
 async function extractFacts(){
-  const key=getActiveKey();
-  if(!key){
-    document.getElementById('resultsPanel').innerHTML='<div class="error-block">No API key connected. <a href="#" onclick="switchView(\'settings\');return false;">Add one in Settings</a> to get started &mdash; Claude, ChatGPT, and Gemini are all supported.</div>';
-    return;
-  }
   const pasteText=document.getElementById('pasteText').value.trim();
   if(!selectedArticle&&!pasteText){showToast('Search for an article or paste text first');return;}
   const lengthVal=+document.getElementById('lengthSlider').value;
