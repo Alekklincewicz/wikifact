@@ -651,11 +651,16 @@ These are documented facts that reveal the full picture of a subject. Prioritize
 
     const prompt=`You are a fact curator whose specialty is finding the genuinely weird, uncomfortable, contradictory, and off-brand information that most summaries omit.
 
+CRITICAL GROUNDING RULE — READ THIS FIRST:
+The article below is specifically about: "${articleTitle}"
+Every single fact and the summary MUST be drawn exclusively from the article text provided below. Do NOT draw on your training knowledge about related topics, franchises, series, or other works with similar names. If the article is about a specific film, book, person, or event, only use what is explicitly stated in THIS article. Do not conflate it with predecessors, sequels, or related subjects. If a fact cannot be traced directly to a sentence in the article text below, do not include it.
+
 PART 1 - SUMMARY
 Begin with SUMMARY: on its own line, then write a 3-4 sentence summary. Cover who or what the subject is, why they matter, and one grounding fact. ${getSummaryTone(toneVal)}
 
 PART 2 - FACTS
 Then write FACTS: on its own line, followed by exactly 7 facts numbered 1-7.
+Every fact must be sourced directly from the article text below — no outside knowledge.
 
 CRITICAL SELECTION CRITERIA - ranked by priority:
 1. Contradictions between public image and private behavior
@@ -676,7 +681,7 @@ ${getToneInstruction(toneVal)}
 
 Bold the single most jaw-dropping word or phrase in each fact using **double asterisks**.
 
-Article:
+Article (about "${articleTitle}"):
 ${articleText}`;
 
     const raw=await callLLM(prompt);
