@@ -245,6 +245,12 @@ input[type="range"]::-moz-range-thumb { width:16px; height:16px; background:var(
 .settings-save-btn:hover { background:var(--ink); transform:translate(-1px,-1px); box-shadow:3px 3px 0 var(--rust); }
 
 .gemini-fallback-note { font-family:var(--mono); font-size:0.68rem; color:var(--green); font-style:italic; padding:6px 10px 7px; background:rgba(42,122,75,0.06); border:1px solid rgba(42,122,75,0.18); border-top:none; letter-spacing:0.02em; }
+.sidebar-footnote { font-family:var(--mono); font-size:0.72rem; color:var(--muted); font-style:italic; line-height:1.6; padding:10px 0 14px; border-bottom:1px solid var(--border); margin-bottom:18px; }
+.footnote-link { background:none; border:none; font-family:var(--mono); font-size:0.72rem; font-style:italic; color:var(--rust); cursor:pointer; padding:0; text-decoration:underline; text-underline-offset:2px; }
+.footnote-link:hover { color:var(--rust2); }
+.settings-desc-text { font-family:var(--mono); font-size:0.76rem; color:var(--muted); font-style:italic; line-height:1.6; margin-bottom:16px; }
+.settings-api-tabs { display:flex; border:1.5px solid var(--ink); overflow:hidden; margin-bottom:0; }
+.active-provider-row { display:flex; align-items:center; gap:10px; padding:9px 12px; background:rgba(42,122,75,0.05); border:1.5px solid rgba(42,122,75,0.2); border-top:none; }
 .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--ink); color:white; font-family:var(--mono); font-size:0.78rem; letter-spacing:0.06em; padding:11px 22px; z-index:1000; transition:transform 0.3s ease; pointer-events:none; font-style:italic; }
 .toast.show { transform:translateX(-50%) translateY(0); }
 
@@ -282,31 +288,9 @@ input[type="range"]::-moz-range-thumb { width:16px; height:16px; background:var(
   <div class="view active" id="view-extract">
     <div class="extract-layout">
       <aside class="sidebar">
-        <div class="api-widget" id="apiWidget">
-          <div class="section-head"><span class="section-label">AI Provider</span><div class="section-rule"></div></div>
-          <div class="api-provider-tabs" id="apiTabs">
-            <button class="api-tab active" data-provider="anthropic" onclick="switchProvider('anthropic')">Claude <span class="dot dot-off" id="dot-anthropic"></span></button>
-            <button class="api-tab" data-provider="openai" onclick="switchProvider('openai')">ChatGPT <span class="dot dot-off" id="dot-openai"></span></button>
-          </div>
-          <div id="apiInputArea">
-            <div id="apiInputRow-anthropic" class="api-key-input-row">
-              <input class="api-key-input" type="password" id="apiKey-anthropic" placeholder="sk-ant-…" autocomplete="off" oninput="onKeyInput('anthropic')" />
-              <button class="api-key-save-btn" onclick="activateKey('anthropic')">Connect</button>
-            </div>
-            <div id="apiInputRow-openai" class="api-key-input-row" style="display:none">
-              <input class="api-key-input" type="password" id="apiKey-openai" placeholder="sk-…" autocomplete="off" oninput="onKeyInput('openai')" />
-              <button class="api-key-save-btn" onclick="activateKey('openai')">Connect</button>
-            </div>
-            <div class="gemini-fallback-note" id="geminiFallbackNote">&#x2022; No key? Gemini runs automatically until credit allocation exhausted.</div>
-          </div>
-          <div class="api-minimized" id="apiMinimized" onclick="expandApiWidget()">
-            <div class="api-minimized-dot"></div>
-            <span class="api-minimized-label" id="apiMinimizedLabel">Connected</span>
-            <span class="api-minimized-change">change</span>
-          </div>
-        </div>
+        <div class="sidebar-footnote">AI provider APIs can be configured in <button class="footnote-link" onclick="switchView('settings')">Settings</button>. If none provided, the app runs via Ollama locally.</div>
 
-        <div class="section-head" style="margin-top:20px"><span class="section-label">Article</span><div class="section-rule"></div></div>
+        <div class="section-head" style="margin-top:4px"><span class="section-label">Article</span><div class="section-rule"></div></div>
         <div class="search-wrap" id="searchWrap">
           <div class="search-input-row">
             <span class="search-icon">&#x2315;</span>
@@ -389,14 +373,43 @@ input[type="range"]::-moz-range-thumb { width:16px; height:16px; background:var(
   <div class="view" id="view-settings">
     <div class="settings-layout">
       <h2 class="settings-title">Settings</h2>
+
       <div class="settings-section">
-        <div class="settings-section-title">API Keys</div>
-        <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Persist Keys to localStorage</div><div class="setting-desc">Keys survive page reloads. Stored only in your browser.</div></div>
+        <div class="settings-section-title">AI Provider</div>
+        <p class="settings-desc-text">Connect a cloud API key for higher quality output, or leave blank to run via Ollama locally. Keys are stored only in your browser.</p>
+
+        <div class="settings-api-tabs" id="apiTabs">
+          <button class="api-tab active" data-provider="anthropic" onclick="switchProvider('anthropic')">Claude <span class="dot dot-off" id="dot-anthropic"></span></button>
+          <button class="api-tab" data-provider="openai" onclick="switchProvider('openai')">ChatGPT <span class="dot dot-off" id="dot-openai"></span></button>
+          <button class="api-tab" data-provider="gemini" onclick="switchProvider('gemini')">Gemini <span class="dot dot-off" id="dot-gemini"></span></button>
+        </div>
+
+        <div id="apiInputArea">
+          <div id="apiInputRow-anthropic" class="api-key-input-row">
+            <input class="api-key-input" type="password" id="apiKey-anthropic" placeholder="sk-ant-…" autocomplete="off" oninput="onKeyInput('anthropic')" />
+            <button class="api-key-save-btn" onclick="activateKey('anthropic')">Connect</button>
+          </div>
+          <div id="apiInputRow-openai" class="api-key-input-row" style="display:none">
+            <input class="api-key-input" type="password" id="apiKey-openai" placeholder="sk-…" autocomplete="off" oninput="onKeyInput('openai')" />
+            <button class="api-key-save-btn" onclick="activateKey('openai')">Connect</button>
+          </div>
+          <div id="apiInputRow-gemini" class="api-key-input-row" style="display:none">
+            <input class="api-key-input" type="password" id="apiKey-gemini" placeholder="AIza…" autocomplete="off" oninput="onKeyInput('gemini')" />
+            <button class="api-key-save-btn" onclick="activateKey('gemini')">Connect</button>
+          </div>
+          <div class="active-provider-row" id="activeProviderRow" style="display:none">
+            <div class="api-minimized-dot" style="width:9px;height:9px;border-radius:50%;background:var(--green);flex-shrink:0"></div>
+            <span id="activeProviderLabel" style="font-family:var(--mono);font-size:0.78rem;color:var(--muted);flex:1;font-style:italic"></span>
+            <button class="ghost-btn" style="padding:4px 10px;font-size:0.68rem" onclick="disconnectProvider()">Disconnect</button>
+          </div>
+        </div>
+
+        <div class="setting-row" style="margin-top:8px">
+          <div class="setting-info"><div class="setting-label">Save keys across sessions</div><div class="setting-desc">Persists to localStorage so keys survive page reloads</div></div>
           <button class="settings-save-btn" onclick="persistKeys()">Save Keys</button>
         </div>
         <div class="setting-row">
-          <div class="setting-info"><div class="setting-label">Clear Stored Keys</div><div class="setting-desc">Removes saved keys from localStorage</div></div>
+          <div class="setting-info"><div class="setting-label">Clear stored keys</div><div class="setting-desc">Removes all saved keys from localStorage</div></div>
           <button class="ghost-btn danger-ghost" onclick="clearStoredKeys()">Clear</button>
         </div>
       </div>
@@ -437,7 +450,7 @@ let savedFacts=LS.get('wf_library')||[];
 let articleHistory=LS.get('wf_history')||[];
 let prefs=LS.get('wf_prefs')||{length:2,tone:2};
 let currentResult=null;
-const sessionKeys={anthropic:'',openai:''};
+const sessionKeys={anthropic:'',openai:'',gemini:''};
 let activeProvider='anthropic';
 let selectedArticle=null,searchDebounce=null,dropdownFocus=-1,dropdownItems=[],pasteOpen=false;
 
@@ -446,8 +459,13 @@ document.addEventListener('DOMContentLoaded',()=>{
   const stored=LS.get('wf_keys')||{};
   if(stored.anthropic){sessionKeys.anthropic=stored.anthropic;document.getElementById('apiKey-anthropic').value=stored.anthropic;}
   if(stored.openai){sessionKeys.openai=stored.openai;document.getElementById('apiKey-openai').value=stored.openai;}
+  if(stored.gemini){sessionKeys.gemini=stored.gemini;document.getElementById('apiKey-gemini').value=stored.gemini;}
   updateProviderDots();
-  if(sessionKeys.anthropic||sessionKeys.openai){const def=sessionKeys.anthropic?'anthropic':'openai';switchProvider(def,true);minimizeApiWidget();}
+  if(sessionKeys.anthropic||sessionKeys.openai||sessionKeys.gemini){
+    const def=sessionKeys.anthropic?'anthropic':sessionKeys.openai?'openai':'gemini';
+    switchProvider(def,true);
+  }
+  showActiveProviderRow();
   document.getElementById('lengthSlider').value=prefs.length;
   document.getElementById('toneSlider').value=prefs.tone;
   document.getElementById('defaultLength').value=prefs.length;
@@ -469,45 +487,51 @@ function switchProvider(provider,quiet){
   document.querySelectorAll('.api-tab').forEach(t=>t.classList.toggle('active',t.dataset.provider===provider));
   document.getElementById('apiInputRow-anthropic').style.display=provider==='anthropic'?'flex':'none';
   document.getElementById('apiInputRow-openai').style.display=provider==='openai'?'flex':'none';
-  if(!quiet&&document.getElementById('apiMinimized').classList.contains('visible'))expandApiWidget();
+  document.getElementById('apiInputRow-gemini').style.display=provider==='gemini'?'flex':'none';
+  if(!quiet&&document.getElementById('activeProviderRow'))showActiveProviderRow();
 }
 function onKeyInput(provider){sessionKeys[provider]=document.getElementById('apiKey-'+provider).value.trim();updateProviderDots();}
 function activateKey(provider){
   const val=document.getElementById('apiKey-'+provider).value.trim();
   if(!val){showToast('Please enter a key first');return;}
-  sessionKeys[provider]=val;activeProvider=provider;updateProviderDots();minimizeApiWidget();
-  showToast(provider==='anthropic'?'Claude connected':'ChatGPT connected');
+  sessionKeys[provider]=val;activeProvider=provider;updateProviderDots();
+  showActiveProviderRow();
+  showToast(provider==='anthropic'?'Claude connected':provider==='openai'?'ChatGPT connected':'Gemini connected');
 }
-function minimizeApiWidget(){
-  if(!sessionKeys[activeProvider])return;
-  document.getElementById('apiInputArea').style.display='none';
-  document.getElementById('apiTabs').style.display='none';
-  document.getElementById('apiMinimized').classList.add('visible');
-  document.getElementById('apiMinimizedLabel').textContent=(activeProvider==='anthropic'?'Claude (Anthropic)':'ChatGPT (OpenAI)')+' · connected';
+function showActiveProviderRow(){
+  const key=sessionKeys[activeProvider];
+  const row=document.getElementById('activeProviderRow');
+  if(!row)return;
+  if(key){
+    const labels={anthropic:'Claude (Anthropic)',openai:'ChatGPT (OpenAI)',gemini:'Gemini'};
+    document.getElementById('activeProviderLabel').textContent=(labels[activeProvider]||activeProvider)+' · connected';
+    row.style.display='flex';
+  } else {
+    row.style.display='none';
+  }
 }
-function showGeminiMinimized(){
-  document.getElementById('apiInputArea').style.display='none';
-  document.getElementById('apiTabs').style.display='none';
-  const m=document.getElementById('apiMinimized');
-  m.classList.add('visible');
-  m.querySelector('.api-minimized-dot').style.background='var(--green)';
-  document.getElementById('apiMinimizedLabel').textContent='Gemini (free tier) · active';
+function disconnectProvider(){
+  sessionKeys[activeProvider]='';
+  document.getElementById('apiKey-'+activeProvider).value='';
+  updateProviderDots();
+  showActiveProviderRow();
+  showToast('Disconnected');
 }
-function expandApiWidget(){
-  document.getElementById('apiInputArea').style.display='block';
-  document.getElementById('apiTabs').style.display='flex';
-  document.getElementById('apiMinimized').classList.remove('visible');
-  switchProvider(activeProvider,true);
-}
+function minimizeApiWidget(){}   // no-op — widget now lives in settings
+function showOllamaMinimized(){} // no-op — widget now lives in settings
+function expandApiWidget(){}     // no-op — widget now lives in settings
 function updateProviderDots(){
   document.getElementById('dot-anthropic').className='dot '+(sessionKeys.anthropic?'dot-on':'dot-off');
   document.getElementById('dot-openai').className='dot '+(sessionKeys.openai?'dot-on':'dot-off');
+  document.getElementById('dot-gemini').className='dot '+(sessionKeys.gemini?'dot-on':'dot-off');
 }
 function getActiveKey(){return sessionKeys[activeProvider]||'';}
-function persistKeys(){LS.set('wf_keys',{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai});showToast('Keys saved to localStorage');}
+function persistKeys(){LS.set('wf_keys',{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini});showToast('Keys saved to localStorage');}
 function clearStoredKeys(){
-  LS.del('wf_keys');sessionKeys.anthropic='';sessionKeys.openai='';
-  document.getElementById('apiKey-anthropic').value='';document.getElementById('apiKey-openai').value='';
+  LS.del('wf_keys');sessionKeys.anthropic='';sessionKeys.openai='';sessionKeys.gemini='';
+  document.getElementById('apiKey-anthropic').value='';
+  document.getElementById('apiKey-openai').value='';
+  document.getElementById('apiKey-gemini').value='';
   updateProviderDots();expandApiWidget();showToast('Stored keys cleared');
 }
 
@@ -596,12 +620,12 @@ async function fetchWikipediaText(title){
   return{text:page.extract.slice(0,9000),title:page.title};
 }
 
-const GEMINI_KEY='AIzaSyBoAa4s0FSbj-ZlpqlbsFNBQy1-M0m08Hg';
+const OLLAMA_URL='http://localhost:11434/v1/chat/completions';
+const OLLAMA_MODEL='llama3.2';
 
 async function callLLM(prompt){
   const key=getActiveKey();
-  // If no user key, fall back to Gemini free tier
-  if(!key) return callGemini(prompt);
+  if(!key) return callOllama(prompt);
   if(activeProvider==='anthropic'){
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Anthropic API error '+res.status);}
@@ -612,15 +636,27 @@ async function callLLM(prompt){
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'OpenAI API error '+res.status);}
     return(await res.json()).choices[0].message.content;
   }
+  if(activeProvider==='gemini'){
+    const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2000}})});
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Gemini API error '+res.status);}
+    const d=await res.json();
+    return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  }
   throw new Error('Unknown provider');
 }
 
-async function callGemini(prompt){
-  const url='https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_KEY;
-  const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2000}})});
-  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Gemini API error '+res.status);}
-  const d=await res.json();
-  return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+async function callOllama(prompt){
+  try{
+    const res=await fetch(OLLAMA_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:OLLAMA_MODEL,messages:[{role:'user',content:prompt}],stream:false})});
+    if(!res.ok)throw new Error('Ollama returned '+res.status);
+    const d=await res.json();
+    return d.choices?.[0]?.message?.content||'';
+  }catch(err){
+    if(err.message.includes('fetch')||err.message.includes('Failed')||err.message.includes('NetworkError')){
+      throw new Error('Ollama not running. Start it with: ollama serve — or connect a cloud API key above.');
+    }
+    throw err;
+  }
 }
 
 function parseResponse(raw){
@@ -650,10 +686,8 @@ async function extractFacts(){
   const btn=document.getElementById('extractBtn'),panel=document.getElementById('resultsPanel');
   const pasteText=document.getElementById('pasteText').value.trim();
   if(!selectedArticle&&!pasteText){showToast('Search for an article or paste text first');return;}
-  const usingGemini=!getActiveKey();
-  if(usingGemini)showGeminiMinimized();
   btn.disabled=true;btn.textContent='Learning\u2026';
-  const providerLabel=usingGemini?'Gemini':activeProvider==='anthropic'?'Claude':'ChatGPT';
+  const providerLabel=!getActiveKey()?'Ollama':activeProvider==='anthropic'?'Claude':activeProvider==='openai'?'ChatGPT':'Gemini';
   panel.innerHTML='<div class="loading-block"><div class="loading-spinner"></div><div class="loading-text">Extracting via '+providerLabel+'</div></div>';
   try{
     let articleText,articleTitle,articleUrl='';
@@ -731,7 +765,7 @@ async function loadSuggestions(currentArticle){
   const factSnippets=savedFacts.slice(-6).map(f=>f.text.replace(/\*\*/g,'').slice(0,80)).join(' | ');
   const hasSomeCtx=savedSources.length>0||historyTitles.length>0;
   let searchTerms=[];
-  if(hasSomeCtx&&getActiveKey()){
+  if(hasSomeCtx){
     try{
       const ctxPrompt='Based on someone who has read these Wikipedia articles: '+[currentArticle,...savedSources,...historyTitles].slice(0,8).join(', ')+', and saved facts with themes like: "'+factSnippets.slice(0,200)+'", suggest exactly 5 different Wikipedia article titles they would genuinely enjoy reading next. Return ONLY a JSON array of strings, no explanation, no markdown.';
       const raw=await callLLM(ctxPrompt);
