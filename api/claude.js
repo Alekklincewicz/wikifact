@@ -1,13 +1,18 @@
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin || '';
+  const allowed = ['https://www.wiki-facts.com', 'https://alekklincewicz.github.io', 'https://wikifact.vercel.app'];
+  const allowOrigin = allowed.includes(origin) ? origin : allowed[0];
+
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Vary', 'Origin');
 
   if (req.method === 'OPTIONS') { res.status(204).end(); return; }
   if (req.method !== 'POST')    { res.status(405).json({ error: { message: 'Method not allowed' } }); return; }
 
   const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) { res.status(500).json({ error: { message: 'ANTHROPIC_API_KEY not configured in Vercel environment variables.' } }); return; }
+  if (!key) { res.status(500).json({ error: { message: 'ANTHROPIC_API_KEY not configured.' } }); return; }
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
