@@ -288,7 +288,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
         <!-- API status pill -->
         <button class="api-status-pill" id="apiStatusPill" onclick="switchView('settings')">
           <span class="dot dot-off" id="pillDot"></span>
-          <span id="pillLabel">Gemini &middot; free tier</span>
+          <span id="pillLabel">Claude &middot; free tier</span>
         </button>
 
         <div class="section-head"><span class="section-label">Article</span><div class="section-rule"></div></div>
@@ -533,7 +533,7 @@ function updateApiStatusPill(){
     pill.style.borderColor='rgba(42,122,75,0.3)';
   }else{
     dot.className='dot dot-on';
-    label.textContent='Gemini \u00b7 free tier';
+    label.textContent='Claude \u00b7 free tier';
     pill.style.borderColor='rgba(42,122,75,0.15)';
   }
 }
@@ -643,7 +643,7 @@ async function fetchWikipediaText(title){
 /* LLM CALL */
 async function callLLM(prompt){
   const key=getActiveKey();
-  if(!key) return callVercelGemini(prompt);
+  if(!key) return callVercelFallback(prompt);
   if(activeProvider==='anthropic'){
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Anthropic error '+res.status);}
@@ -662,15 +662,39 @@ async function callLLM(prompt){
   throw new Error('Unknown provider');
 }
 
+async function callVercelClaude(prompt){
+  const res=await fetch('/api/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2000,messages:[{role:'user',content:prompt}]})
+  });
+  const d=await res.json();
+  if(!res.ok)throw new Error(d.error?.message||'Claude proxy error '+res.status);
+  return d.content[0].text;
+}
+
 async function callVercelGemini(prompt){
   const res=await fetch('/api/gemini',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2000}})
   });
-  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Gemini error '+res.status);}
   const d=await res.json();
+  if(!res.ok)throw new Error(d.error?.message||'Gemini proxy error '+res.status);
   return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+}
+
+async function callVercelFallback(prompt){
+  try{
+    return await callVercelClaude(prompt);
+  }catch(claudeErr){
+    console.warn('Claude proxy failed, trying Gemini:',claudeErr.message);
+    try{
+      return await callVercelGemini(prompt);
+    }catch(geminiErr){
+      throw new Error('Both proxies failed. Claude: '+claudeErr.message+' | Gemini: '+geminiErr.message);
+    }
+  }
 }
 
 /* PARSE RESPONSE */
@@ -703,7 +727,7 @@ async function extractFacts(){
   const nsfwOn=document.getElementById('nsfwToggle').checked;
   const btn=document.getElementById('extractBtn'),panel=document.getElementById('resultsPanel');
   btn.disabled=true;btn.textContent='Learning\u2026';
-  const providerLabel=getActiveKey()?{anthropic:'Claude',openai:'ChatGPT',gemini:'Gemini'}[activeProvider]:'Gemini';
+  const providerLabel=getActiveKey()?{anthropic:'Claude',openai:'ChatGPT',gemini:'Gemini'}[activeProvider]:'Claude';
   panel.innerHTML='<div class="loading-block"><div class="loading-spinner"></div><div class="loading-text">Extracting via '+providerLabel+'&hellip;</div></div>';
   try{
     let articleText,articleTitle,articleUrl='';
