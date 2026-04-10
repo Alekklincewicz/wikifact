@@ -32,7 +32,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
 .masthead-date{text-align:right;font-family:var(--mono);font-size:0.74rem;color:var(--muted);line-height:1.7;font-style:italic;flex-shrink:0}
 .masthead-nav{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .masthead-nav::-webkit-scrollbar{display:none}
-.nav-btn{padding:11px 20px;background:none;border:none;border-right:1px solid var(--border);font-family:var(--mono);font-size:0.8rem;color:var(--muted);cursor:pointer;transition:color 0.15s;position:relative;font-style:italic;white-space:nowrap;flex-shrink:0}
+.nav-btn{padding:11px 22px;background:none;border:none;border-right:1px solid var(--border);font-family:var(--serif);font-size:1rem;font-weight:400;font-style:italic;color:var(--muted);cursor:pointer;transition:color 0.15s;position:relative;white-space:nowrap;flex-shrink:0}
 .nav-btn:first-child{border-left:1px solid var(--border)}
 .nav-btn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--rust);transform:scaleX(0);transition:transform 0.2s ease}
 .nav-btn:hover{color:var(--ink)}.nav-btn:hover::after{transform:scaleX(1)}
@@ -180,7 +180,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
 /* LIBRARY */
 .library-layout{padding:40px 0 80px}
 .library-toolbar{display:flex;align-items:center;gap:16px;margin-bottom:28px;flex-wrap:wrap}
-.library-title{font-family:var(--serif);font-size:1.9rem;font-weight:400}
+.library-title{font-family:var(--serif);font-size:2.4rem;font-weight:700;font-style:italic;letter-spacing:-0.5px}
 .library-count{font-family:var(--mono);font-size:0.78rem;font-style:italic;color:var(--muted)}
 .library-spacer{flex:1}
 .ghost-btn{padding:8px 14px;background:none;border:1.5px solid var(--border);font-family:var(--mono);font-size:0.7rem;font-style:italic;color:var(--muted);cursor:pointer;transition:all 0.15s}
@@ -202,9 +202,26 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
 
 /* HISTORY */
 .history-layout{padding:40px 0 80px}
-.history-title{font-family:var(--serif);font-size:1.9rem;font-weight:400;margin-bottom:28px}
-.history-list{list-style:none}
+.history-note{font-family:var(--mono);font-size:0.68rem;font-style:italic;color:var(--muted2);margin-bottom:24px}
+.history-list{list-style:none;margin-bottom:60px}
 .history-item{display:flex;align-items:center;gap:15px;padding:15px 0;border-bottom:1px solid var(--aged);cursor:pointer;transition:all 0.15s;animation:fadeUp 0.3s ease forwards;opacity:0}
+
+/* INTERESTS ANALYSIS */
+.interests-section{border-top:1.5px solid var(--ink);padding-top:36px}
+.interests-title{font-family:var(--serif);font-size:1.6rem;font-weight:700;font-style:italic;letter-spacing:-0.5px;margin-bottom:6px}
+.interests-sub{font-family:var(--mono);font-size:0.68rem;font-style:italic;color:var(--muted2);margin-bottom:24px}
+.interests-card{background:white;border:1.5px solid var(--ink);box-shadow:4px 4px 0 var(--aged);padding:24px 28px;position:relative}
+.interests-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--rust)}
+.interests-content{font-family:var(--body);font-size:0.92rem;line-height:1.82;font-weight:300;color:var(--ink)}
+.interests-content strong{font-weight:600;color:var(--rust)}
+.interests-meta{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:12px;border-top:1px solid var(--aged);flex-wrap:wrap;gap:8px}
+.interests-meta-label{font-family:var(--mono);font-size:0.64rem;font-style:italic;color:var(--muted2)}
+.interests-refresh{padding:6px 14px;background:none;border:1.5px solid var(--border);font-family:var(--mono);font-size:0.68rem;font-style:italic;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.interests-refresh:hover{border-color:var(--rust);color:var(--rust)}
+.interests-loading{display:flex;align-items:center;gap:12px;padding:20px 0}
+.interests-loading-spinner{width:20px;height:20px;border:1.5px solid var(--aged);border-top-color:var(--rust);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+.interests-loading-text{font-family:var(--mono);font-size:0.72rem;font-style:italic;color:var(--muted)}
+.interests-empty{font-family:var(--mono);font-size:0.72rem;font-style:italic;color:var(--muted2);padding:20px 0}
 .history-item:hover .history-item-name{color:var(--rust)}
 .history-item-num{font-family:var(--serif);font-size:1.2rem;font-style:italic;color:var(--muted2);width:28px;text-align:right;flex-shrink:0}
 .history-item-info{flex:1;min-width:0}
@@ -215,7 +232,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
 
 /* SETTINGS */
 .settings-layout{max-width:580px;padding:40px 0 80px}
-.settings-title{font-family:var(--serif);font-size:1.9rem;font-weight:400;margin-bottom:32px}
+.settings-title{font-family:var(--serif);font-size:2.4rem;font-weight:700;font-style:italic;letter-spacing:-0.5px;margin-bottom:32px}
 .settings-section{margin-bottom:32px}
 .settings-section-title{font-family:var(--mono);font-size:0.72rem;font-style:italic;color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:18px;letter-spacing:0.05em}
 .settings-desc-text{font-family:var(--body);font-size:0.86rem;color:var(--muted);line-height:1.6;margin-bottom:14px;font-weight:300}
@@ -300,7 +317,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
       <div id="authArea" style="flex-shrink:0"></div>
     </div>
     <nav class="masthead-nav">
-      <button class="nav-btn active" data-view="extract" onclick="switchView('extract')">Extract</button>
+      <button class="nav-btn active" data-view="extract" onclick="switchView('extract')">Home</button>
       <button class="nav-btn" data-view="library" onclick="switchView('library')">Saved <span class="nav-count" id="libraryCount" style="display:none">0</span></button>
       <button class="nav-btn" data-view="history" onclick="switchView('history')">History <span class="nav-count" id="historyCount" style="display:none">0</span></button>
       <button class="nav-btn" data-view="settings" onclick="switchView('settings')">Settings</button>
@@ -394,7 +411,14 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
   <div class="view" id="view-history">
     <div class="history-layout">
       <h2 class="history-title">Article History</h2>
+      <p class="history-note">Showing the last 7 days of lookups.</p>
       <ul id="historyList" class="history-list"></ul>
+
+      <div class="interests-section">
+        <h3 class="interests-title">Interests Analysis</h3>
+        <p class="interests-sub">An evolving portrait of your reading habits, updated with every lookup.</p>
+        <div id="interestsPanel"></div>
+      </div>
     </div>
   </div>
 
@@ -510,6 +534,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import{getFirestore,doc,getDoc,setDoc,deleteDoc,collection,getDocs,writeBatch,serverTimestamp,query,where,Timestamp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig={
   apiKey:'AIzaSyDeBRJn8UlTXg_FhGgySUYuUmrwzTJhdZ8',
@@ -522,17 +547,140 @@ const firebaseConfig={
 
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
+const db=getFirestore(app);
 
-// Expose to window so non-module scripts can call them
 window._fbAuth=auth;
 window._fbSignUp=(email,pw)=>createUserWithEmailAndPassword(auth,email,pw);
 window._fbSignIn=(email,pw)=>signInWithEmailAndPassword(auth,email,pw);
 window._fbSignOut=()=>signOut(auth);
 
-onAuthStateChanged(auth,user=>{
+/* ── FIRESTORE HELPERS ── */
+
+// Save a single fact to Firestore
+window._fsAddFact=async(uid,fact)=>{
+  await setDoc(doc(db,'users',uid,'facts',String(fact.id)),{
+    text:fact.text,source:fact.source,date:fact.date,savedAt:serverTimestamp()
+  });
+};
+
+// Remove a single fact from Firestore
+window._fsRemoveFact=async(uid,id)=>{
+  await deleteDoc(doc(db,'users',uid,'facts',String(id)));
+};
+
+// Load all saved facts from Firestore
+window._fsLoadFacts=async(uid)=>{
+  const snap=await getDocs(collection(db,'users',uid,'facts'));
+  return snap.docs.map(d=>({id:Number(d.id)||d.id,...d.data()}));
+};
+
+// Save a history entry + prune entries older than 7 days
+window._fsAddHistory=async(uid,entry)=>{
+  const id=entry.articleTitle.replace(/[^a-zA-Z0-9]/g,'_').slice(0,80)+'_'+Date.now();
+  await setDoc(doc(db,'users',uid,'history',id),{
+    ...entry,savedAt:serverTimestamp()
+  });
+  // Prune entries older than 7 days
+  const cutoff=Timestamp.fromDate(new Date(Date.now()-7*24*60*60*1000));
+  const old=await getDocs(query(collection(db,'users',uid,'history'),where('savedAt','<',cutoff)));
+  if(!old.empty){
+    const batch=writeBatch(db);
+    old.docs.forEach(d=>batch.delete(d.ref));
+    await batch.commit();
+  }
+};
+
+// Load history from Firestore
+window._fsLoadHistory=async(uid)=>{
+  const snap=await getDocs(collection(db,'users',uid,'history'));
+  return snap.docs.map(d=>d.data()).sort((a,b)=>new Date(b.date)-new Date(a.date));
+};
+
+// Clear all facts
+window._fsClearFacts=async(uid)=>{
+  const snap=await getDocs(collection(db,'users',uid,'facts'));
+  if(snap.empty)return;
+  const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));await batch.commit();
+};
+
+// Clear all history
+window._fsClearHistory=async(uid)=>{
+  const snap=await getDocs(collection(db,'users',uid,'history'));
+  if(snap.empty)return;
+  const batch=writeBatch(db);snap.docs.forEach(d=>batch.delete(d.ref));await batch.commit();
+};
+
+// Save/load compact article metadata for interests analysis (all-time, no pruning)
+window._fsSaveInterestsMeta=async(uid,metaList)=>{
+  await setDoc(doc(db,'users',uid,'private','interestsMeta'),{articles:metaList,updatedAt:serverTimestamp()});
+};
+window._fsLoadInterestsMeta=async(uid)=>{
+  const snap=await getDoc(doc(db,'users',uid,'private','interestsMeta'));
+  return snap.exists()?snap.data().articles||[]:[];
+};
+window._fsSaveInterestsAnalysis=async(uid,text)=>{
+  await setDoc(doc(db,'users',uid,'private','interestsAnalysis'),{text,updatedAt:serverTimestamp()});
+};
+window._fsLoadInterestsAnalysis=async(uid)=>{
+  const snap=await getDoc(doc(db,'users',uid,'private','interestsAnalysis'));
+  return snap.exists()?snap.data():{text:null,updatedAt:null};
+};
+window._fsSaveKeys=async(uid,keys)=>{
+  await setDoc(doc(db,'users',uid,'private','keys'),{...keys,updatedAt:serverTimestamp()});
+};
+
+// Load API keys
+window._fsLoadKeys=async(uid)=>{
+  const snap=await getDoc(doc(db,'users',uid,'private','keys'));
+  return snap.exists()?snap.data():null;
+};
+
+/* ── AUTH STATE ── */
+onAuthStateChanged(auth,async user=>{
   window._currentUser=user||null;
+  if(user){
+    // Load keys from Firestore and populate session
+    try{
+      const keys=await window._fsLoadKeys(user.uid);
+      if(keys){
+        ['anthropic','openai','gemini'].forEach(p=>{
+          if(keys[p]){
+            sessionKeys[p]=keys[p];
+            const el=document.getElementById('apiKey-'+p);
+            if(el)el.value=keys[p];
+          }
+        });
+        const def=sessionKeys.anthropic?'anthropic':sessionKeys.openai?'openai':sessionKeys.gemini?'gemini':null;
+        if(def&&typeof switchProvider==='function')switchProvider(def,true);
+        if(typeof updateProviderDots==='function')updateProviderDots();
+        if(typeof showActiveProviderRow==='function')showActiveProviderRow();
+      }
+    }catch(e){console.warn('Could not load keys:',e);}
+    // Load facts and history from Firestore
+    try{
+      const[facts,history]=await Promise.all([window._fsLoadFacts(user.uid),window._fsLoadHistory(user.uid)]);
+      savedFacts=facts;
+      articleHistory=history;
+      if(typeof updateCounts==='function')updateCounts();
+    }catch(e){console.warn('Could not load user data:',e);}
+  }else{
+    // Signed out — clear session keys from inputs
+    ['anthropic','openai','gemini'].forEach(p=>{
+      sessionKeys[p]='';
+      const el=document.getElementById('apiKey-'+p);
+      if(el)el.value='';
+    });
+    // Fall back to localStorage
+    const LS={get:k=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}}};
+    savedFacts=LS.get('wf_library')||[];
+    articleHistory=LS.get('wf_history')||[];
+    if(typeof updateProviderDots==='function')updateProviderDots();
+    if(typeof showActiveProviderRow==='function')showActiveProviderRow();
+    if(typeof updateCounts==='function')updateCounts();
+  }
   updateAuthUI(user);
   if(typeof updateApiStatusPill==='function')updateApiStatusPill();
+  if(typeof updateUsageCounter==='function')updateUsageCounter();
 });
 
 function updateAuthUI(user){
@@ -543,7 +691,7 @@ function updateAuthUI(user){
     counter.style.display='none';
   }else{
     area.innerHTML=`<button class="auth-btn" onclick="openAuthModal('signup')">Sign in / Register</button>`;
-    updateUsageCounter();
+    if(typeof updateUsageCounter==='function')updateUsageCounter();
   }
 }
 
@@ -651,7 +799,7 @@ function switchView(name){
   document.getElementById('view-'+name).classList.add('active');
   document.querySelector('[data-view="'+name+'"]').classList.add('active');
   if(name==='library')renderLibrary();
-  if(name==='history')renderHistoryView();
+  if(name==='history'){renderHistoryView();renderInterestsPanel();}
 }
 
 /* API PROVIDER */
@@ -667,6 +815,10 @@ function activateKey(p){
   if(!val){showToast('Please enter a key first');return;}
   sessionKeys[p]=val;activeProvider=p;
   updateProviderDots();showActiveProviderRow();updateApiStatusPill();
+  if(window._currentUser){
+    window._fsSaveKeys(window._currentUser.uid,{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini})
+      .catch(()=>{});
+  }
   showToast('API key connected');
 }
 function disconnectProvider(){
@@ -693,11 +845,19 @@ function updateApiStatusPill(){
   if(btn)btn.classList.toggle('dim',dim);
 }
 function getActiveKey(){return sessionKeys[activeProvider]||'';}
-function persistKeys(){LS.set('wf_keys',{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini});showToast('Key saved');}
+function persistKeys(){
+  LS.set('wf_keys',{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini});
+  if(window._currentUser){
+    window._fsSaveKeys(window._currentUser.uid,{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini})
+      .then(()=>showToast('Key saved to your account'))
+      .catch(()=>showToast('Key saved locally'));
+  }else{showToast('Key saved');}
+}
 function clearStoredKeys(){
   LS.del('wf_keys');
   ['anthropic','openai','gemini'].forEach(p=>{sessionKeys[p]='';document.getElementById('apiKey-'+p).value='';});
   updateProviderDots();showActiveProviderRow();updateApiStatusPill();showToast('Keys cleared');
+  if(window._currentUser)window._fsSaveKeys(window._currentUser.uid,{anthropic:'',openai:'',gemini:''}).catch(()=>{});
 }
 
 /* SEARCH */
@@ -1027,16 +1187,26 @@ function toggleSaveFact(idx){
   if(!currentResult)return;
   const fact=currentResult.facts[idx],source=currentResult.articleTitle,btn=document.getElementById('savebtn-'+idx);
   const ei=savedFacts.findIndex(f=>f.text===fact&&f.source===source);
-  if(ei>=0){savedFacts.splice(ei,1);btn.textContent='\u2606';btn.classList.remove('saved');showToast('Fact removed');}
-  else{savedFacts.push({id:Date.now()+idx,text:fact,source,date:new Date().toLocaleDateString()});btn.textContent='\u2605';btn.classList.add('saved');showToast('Fact saved');}
+  if(ei>=0){
+    const removed=savedFacts.splice(ei,1)[0];
+    btn.textContent='\u2606';btn.classList.remove('saved');showToast('Fact removed');
+    if(window._currentUser)window._fsRemoveFact(window._currentUser.uid,removed.id).catch(()=>{});
+  }else{
+    const newFact={id:Date.now()+idx,text:fact,source,date:new Date().toLocaleDateString()};
+    savedFacts.push(newFact);btn.textContent='\u2605';btn.classList.add('saved');showToast('Fact saved');
+    if(window._currentUser)window._fsAddFact(window._currentUser.uid,newFact).catch(()=>{});
+  }
   LS.set('wf_library',savedFacts);updateCounts();
 }
 function saveAllFacts(){
   if(!currentResult)return;let added=0;
   currentResult.facts.forEach((fact,i)=>{
     if(!savedFacts.some(f=>f.text===fact&&f.source===currentResult.articleTitle)){
-      savedFacts.push({id:Date.now()+i,text:fact,source:currentResult.articleTitle,date:new Date().toLocaleDateString()});
-      const b=document.getElementById('savebtn-'+i);if(b){b.textContent='\u2605';b.classList.add('saved');}added++;
+      const newFact={id:Date.now()+i,text:fact,source:currentResult.articleTitle,date:new Date().toLocaleDateString()};
+      savedFacts.push(newFact);
+      const b=document.getElementById('savebtn-'+i);if(b){b.textContent='\u2605';b.classList.add('saved');}
+      if(window._currentUser)window._fsAddFact(window._currentUser.uid,newFact).catch(()=>{});
+      added++;
     }
   });
   LS.set('wf_library',savedFacts);updateCounts();showToast(added>0?added+' facts saved':'All facts already saved');
@@ -1047,8 +1217,16 @@ function renderLibrary(){
   if(!savedFacts.length){grid.innerHTML='<div class="library-empty"><span class="empty-icon">\u2605</span><div class="empty-label">No saved facts yet</div></div>';return;}
   grid.innerHTML=savedFacts.slice().reverse().map(f=>'<div class="library-card"><div class="library-card-source">'+esc(f.source)+'</div><p class="library-card-text">'+fmt(f.text)+'</p><div class="library-card-footer"><span class="library-card-date">'+esc(f.date)+'</span><button class="remove-btn" onclick="removeFact('+f.id+')">Remove</button></div></div>').join('');
 }
-function removeFact(id){savedFacts=savedFacts.filter(f=>f.id!==id);LS.set('wf_library',savedFacts);updateCounts();renderLibrary();}
-function clearLibrary(){if(!confirm('Clear all saved facts?'))return;savedFacts=[];LS.set('wf_library',savedFacts);updateCounts();renderLibrary();showToast('Library cleared');}
+function removeFact(id){
+  savedFacts=savedFacts.filter(f=>f.id!==id);
+  LS.set('wf_library',savedFacts);updateCounts();renderLibrary();
+  if(window._currentUser)window._fsRemoveFact(window._currentUser.uid,id).catch(()=>{});
+}
+function clearLibrary(){
+  if(!confirm('Clear all saved facts?'))return;
+  savedFacts=[];LS.set('wf_library',savedFacts);updateCounts();renderLibrary();showToast('Library cleared');
+  if(window._currentUser)window._fsClearFacts(window._currentUser.uid).catch(()=>{});
+}
 function exportLibrary(){
   if(!savedFacts.length){showToast('Nothing to export');return;}
   const rows=[['Source','Fact','Date'],...savedFacts.map(f=>[f.source,f.text.replace(/\*\*/g,''),f.date])];
@@ -1059,8 +1237,94 @@ function exportLibrary(){
 /* HISTORY */
 function addToHistory(result){
   articleHistory=articleHistory.filter(h=>h.articleTitle!==result.articleTitle);
-  articleHistory.unshift(result);if(articleHistory.length>50)articleHistory=articleHistory.slice(0,50);
+  articleHistory.unshift(result);
+  if(articleHistory.length>50)articleHistory=articleHistory.slice(0,50);
   LS.set('wf_history',articleHistory);updateCounts();
+  if(window._currentUser){
+    window._fsAddHistory(window._currentUser.uid,result).catch(()=>{});
+    // Update interests metadata (article title + date only, stored indefinitely)
+    window._fsLoadInterestsMeta(window._currentUser.uid).then(existing=>{
+      const already=existing.find(m=>m.title===result.articleTitle);
+      if(!already){
+        const updated=[...existing,{title:result.articleTitle,date:result.date}].slice(-200);
+        window._fsSaveInterestsMeta(window._currentUser.uid,updated).catch(()=>{});
+      }
+    }).catch(()=>{});
+  }
+}
+
+/* INTERESTS ANALYSIS */
+let interestsAnalysisCache=null;
+
+async function renderInterestsPanel(){
+  const panel=document.getElementById('interestsPanel');
+  if(!panel)return;
+
+  if(!window._currentUser){
+    panel.innerHTML='<div class="interests-empty">Sign in to unlock your Interests Analysis — it builds over time as you explore.</div>';
+    return;
+  }
+
+  // Load existing analysis first (fast)
+  let existing=null;
+  try{existing=await window._fsLoadInterestsAnalysis(window._currentUser.uid);}catch{}
+
+  const meta=await window._fsLoadInterestsMeta(window._currentUser.uid).catch(()=>[]);
+  if(!meta.length){
+    panel.innerHTML='<div class="interests-empty">No data yet — your analysis will appear after a few lookups.</div>';
+    return;
+  }
+
+  if(existing?.text){
+    renderInterestsCard(panel,existing.text,existing.updatedAt,meta.length);
+    return;
+  }
+
+  await generateInterestsAnalysis(panel,meta);
+}
+
+async function generateInterestsAnalysis(panel,meta){
+  panel.innerHTML='<div class="interests-loading"><div class="interests-loading-spinner"></div><div class="interests-loading-text">Analysing your reading habits&hellip;</div></div>';
+
+  const titles=meta.map(m=>m.title);
+  const prompt=`You are an insightful reader profile analyst. Based on the following list of Wikipedia articles a person has looked up, write a short, vivid, first-person-style analysis of their intellectual interests and curiosities. 
+
+DO NOT list the articles back. Instead, identify patterns, themes, unexpected connections, and what they reveal about the reader's mind. Write 3-4 sentences. Be specific and observant, not generic. Use **bold** for key themes or descriptors.
+
+Articles explored (${titles.length} total):
+${titles.join(', ')}
+
+Write the analysis now:`;
+
+  try{
+    const text=await callLLM(prompt);
+    if(window._currentUser){
+      await window._fsSaveInterestsAnalysis(window._currentUser.uid,text).catch(()=>{});
+    }
+    const ts=new Date().toISOString();
+    renderInterestsCard(panel,text,{toDate:()=>new Date(ts)},titles.length);
+  }catch(err){
+    panel.innerHTML='<div class="interests-empty">Could not generate analysis — '+esc(err.message)+'</div>';
+  }
+}
+
+function renderInterestsCard(panel,text,updatedAt,articleCount){
+  const date=updatedAt?.toDate?updatedAt.toDate():updatedAt?new Date(updatedAt):new Date();
+  const dateStr=date.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  panel.innerHTML=`<div class="interests-card">
+    <div class="interests-content">${fmt(text)}</div>
+    <div class="interests-meta">
+      <span class="interests-meta-label">Based on ${articleCount} article${articleCount!==1?'s':''} &middot; Last updated ${dateStr}</span>
+      <button class="interests-refresh" onclick="refreshInterestsAnalysis()">Refresh analysis</button>
+    </div>
+  </div>`;
+}
+
+async function refreshInterestsAnalysis(){
+  if(!window._currentUser)return;
+  const meta=await window._fsLoadInterestsMeta(window._currentUser.uid).catch(()=>[]);
+  if(!meta.length)return;
+  await generateInterestsAnalysis(document.getElementById('interestsPanel'),meta);
 }
 function renderHistoryView(){
   const list=document.getElementById('historyList');
@@ -1074,7 +1338,11 @@ function loadFromHistory(idx){
   if(h.articleTitle!=='Pasted Article'){selectedArticle={title:h.articleTitle,url:h.articleUrl||''};document.getElementById('selectedName').textContent=h.articleTitle;document.getElementById('selectedChip').classList.add('visible');}
   switchView('extract');renderResults(h,document.getElementById('resultsPanel'));
 }
-function clearHistory(){if(!confirm('Clear history?'))return;articleHistory=[];LS.set('wf_history',articleHistory);updateCounts();renderHistoryView();showToast('History cleared');}
+function clearHistory(){
+  if(!confirm('Clear history?'))return;
+  articleHistory=[];LS.set('wf_history',articleHistory);updateCounts();renderHistoryView();showToast('History cleared');
+  if(window._currentUser)window._fsClearHistory(window._currentUser.uid).catch(()=>{});
+}
 
 /* SETTINGS */
 function saveDefaults(){
@@ -1098,4 +1366,7 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 </script>
 
 <div style="text-align:center;padding:40px 0 20px;border-top:1px solid var(--border);margin-top:20px">
-  <a href="/cdn-cgi/l/email-protection#a9c8c5ccc287c2c5c0c7caccdec0cad3e9cec4c8c0c587cac6c4" style="font-family:var(--mono);font-size:0.72rem;font-style:italic;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:2px;transition:color 0.15s" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--muted)'
+  <a href="mailto:alek.klincewicz@gmail.com" style="font-family:var(--mono);font-size:0.72rem;font-style:italic;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:2px;transition:color 0.15s" onmouseover="this.style.color="var(--rust)"" onmouseout="this.style.color="var(--muted)"">Contact the Creator</a>
+</div>
+</body>
+</html>
