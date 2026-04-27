@@ -447,6 +447,7 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
           <button class="api-tab active" data-provider="anthropic" onclick="switchProvider('anthropic')">Claude <span class="dot dot-off" id="dot-anthropic"></span></button>
           <button class="api-tab" data-provider="openai" onclick="switchProvider('openai')">ChatGPT <span class="dot dot-off" id="dot-openai"></span></button>
           <button class="api-tab" data-provider="gemini" onclick="switchProvider('gemini')">Gemini <span class="dot dot-off" id="dot-gemini"></span></button>
+          <button class="api-tab" data-provider="deepseek" onclick="switchProvider('deepseek')">DeepSeek <span class="dot dot-off" id="dot-deepseek"></span></button>
         </div>
         <div id="apiInputArea">
           <div id="apiInputRow-anthropic" class="api-key-input-row">
@@ -460,6 +461,10 @@ input[type="range"]::-moz-range-thumb{width:14px;height:14px;background:var(--ru
           <div id="apiInputRow-gemini" class="api-key-input-row" style="display:none">
             <input class="api-key-input" type="password" id="apiKey-gemini" placeholder="AIza&hellip;" autocomplete="off" oninput="onKeyInput('gemini')" />
             <button class="api-key-save-btn" onclick="activateKey('gemini')">Connect</button>
+          </div>
+          <div id="apiInputRow-deepseek" class="api-key-input-row" style="display:none">
+            <input class="api-key-input" type="password" id="apiKey-deepseek" placeholder="sk-&hellip;" autocomplete="off" oninput="onKeyInput('deepseek')" />
+            <button class="api-key-save-btn" onclick="activateKey('deepseek')">Connect</button>
           </div>
           <div class="active-provider-row" id="activeProviderRow">
             <div class="active-provider-dot"></div>
@@ -656,14 +661,14 @@ onAuthStateChanged(auth,async user=>{
     try{
       const keys=await window._fsLoadKeys(user.uid);
       if(keys){
-        ['anthropic','openai','gemini'].forEach(p=>{
+        ['anthropic','openai','gemini','deepseek'].forEach(p=>{
           if(keys[p]){
             sessionKeys[p]=keys[p];
             const el=document.getElementById('apiKey-'+p);
             if(el)el.value=keys[p];
           }
         });
-        const def=sessionKeys.anthropic?'anthropic':sessionKeys.openai?'openai':sessionKeys.gemini?'gemini':null;
+        const def=sessionKeys.anthropic?'anthropic':sessionKeys.openai?'openai':sessionKeys.gemini?'gemini':sessionKeys.deepseek?'deepseek':null;
         if(def&&typeof switchProvider==='function')switchProvider(def,true);
         if(typeof updateProviderDots==='function')updateProviderDots();
         if(typeof showActiveProviderRow==='function')showActiveProviderRow();
@@ -678,7 +683,7 @@ onAuthStateChanged(auth,async user=>{
     }catch(e){console.warn('Could not load user data:',e);}
   }else{
     // Signed out — clear session keys from inputs
-    ['anthropic','openai','gemini'].forEach(p=>{
+    ['anthropic','openai','gemini','deepseek'].forEach(p=>{
       sessionKeys[p]='';
       const el=document.getElementById('apiKey-'+p);
       if(el)el.value='';
@@ -717,7 +722,7 @@ let savedFacts=LS.get('wf_library')||[];
 let articleHistory=LS.get('wf_history')||[];
 let prefs=LS.get('wf_prefs')||{length:2,tone:2};
 let currentResult=null;
-const sessionKeys={anthropic:'',openai:'',gemini:''};
+const sessionKeys={anthropic:'',openai:'',gemini:'',deepseek:''};
 let activeProvider='anthropic';
 let selectedArticle=null,searchDebounce=null,dropdownFocus=-1,dropdownItems=[],pasteOpen=false;
 
@@ -789,12 +794,12 @@ document.addEventListener('click',e=>{
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('mastheadDate').innerHTML=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})+'<br>Vol. II';
   const stored=LS.get('wf_keys')||{};
-  ['anthropic','openai','gemini'].forEach(p=>{
+  ['anthropic','openai','gemini','deepseek'].forEach(p=>{
     if(stored[p]){sessionKeys[p]=stored[p];document.getElementById('apiKey-'+p).value=stored[p];}
   });
   updateProviderDots();
-  if(sessionKeys.anthropic||sessionKeys.openai||sessionKeys.gemini){
-    const def=sessionKeys.anthropic?'anthropic':sessionKeys.openai?'openai':'gemini';
+  if(sessionKeys.anthropic||sessionKeys.openai||sessionKeys.gemini||sessionKeys.deepseek){
+    const def=sessionKeys.anthropic?'anthropic':sessionKeys.openai?'openai':sessionKeys.gemini?'gemini':'deepseek';
     switchProvider(def,true);
   }
   showActiveProviderRow();updateApiStatusPill();
@@ -819,7 +824,7 @@ function switchView(name){
 function switchProvider(provider,quiet){
   activeProvider=provider;
   document.querySelectorAll('.api-tab').forEach(t=>t.classList.toggle('active',t.dataset.provider===provider));
-  ['anthropic','openai','gemini'].forEach(p=>{document.getElementById('apiInputRow-'+p).style.display=p===provider?'flex':'none';});
+  ['anthropic','openai','gemini','deepseek'].forEach(p=>{document.getElementById('apiInputRow-'+p).style.display=p===provider?'flex':'none';});
   if(!quiet){showActiveProviderRow();updateApiStatusPill();}
 }
 function onKeyInput(p){sessionKeys[p]=document.getElementById('apiKey-'+p).value.trim();updateProviderDots();}
@@ -829,7 +834,7 @@ function activateKey(p){
   sessionKeys[p]=val;activeProvider=p;
   updateProviderDots();showActiveProviderRow();updateApiStatusPill();
   if(window._currentUser){
-    window._fsSaveKeys(window._currentUser.uid,{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini})
+    window._fsSaveKeys(window._currentUser.uid,{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini,deepseek:sessionKeys.deepseek})
       .catch(()=>{});
   }
   showToast('API key connected');
@@ -848,7 +853,7 @@ function showActiveProviderRow(){
   }else{row.classList.remove('visible');}
 }
 function updateProviderDots(){
-  ['anthropic','openai','gemini'].forEach(p=>{document.getElementById('dot-'+p).className='dot '+(sessionKeys[p]?'dot-on':'dot-off');});
+  ['anthropic','openai','gemini','deepseek'].forEach(p=>{document.getElementById('dot-'+p).className='dot '+(sessionKeys[p]?'dot-on':'dot-off');});
 }
 function updateApiStatusPill(){
   const available=getActiveKey()||(window._currentUser?true:false)||(!window._currentUser&&!getActiveKey());
@@ -859,18 +864,18 @@ function updateApiStatusPill(){
 }
 function getActiveKey(){return sessionKeys[activeProvider]||'';}
 function persistKeys(){
-  LS.set('wf_keys',{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini});
+  LS.set('wf_keys',{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini,deepseek:sessionKeys.deepseek});
   if(window._currentUser){
-    window._fsSaveKeys(window._currentUser.uid,{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini})
+    window._fsSaveKeys(window._currentUser.uid,{anthropic:sessionKeys.anthropic,openai:sessionKeys.openai,gemini:sessionKeys.gemini,deepseek:sessionKeys.deepseek})
       .then(()=>showToast('Key saved to your account'))
       .catch(()=>showToast('Key saved locally'));
   }else{showToast('Key saved');}
 }
 function clearStoredKeys(){
   LS.del('wf_keys');
-  ['anthropic','openai','gemini'].forEach(p=>{sessionKeys[p]='';document.getElementById('apiKey-'+p).value='';});
+  ['anthropic','openai','gemini','deepseek'].forEach(p=>{sessionKeys[p]='';document.getElementById('apiKey-'+p).value='';});
   updateProviderDots();showActiveProviderRow();updateApiStatusPill();showToast('Keys cleared');
-  if(window._currentUser)window._fsSaveKeys(window._currentUser.uid,{anthropic:'',openai:'',gemini:''}).catch(()=>{});
+  if(window._currentUser)window._fsSaveKeys(window._currentUser.uid,{anthropic:'',openai:'',gemini:'',deepseek:''}).catch(()=>{});
 }
 
 /* SEARCH */
@@ -1012,6 +1017,11 @@ async function callLLM(prompt){
     const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+key,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:2000}})});
     if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'Gemini error '+res.status);}
     const d=await res.json();return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  }
+  if(activeProvider==='deepseek'){
+    const res=await fetch('https://api.deepseek.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-chat',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'DeepSeek error '+res.status);}
+    return(await res.json()).choices[0].message.content;
   }
   throw new Error('Unknown provider');
 }
